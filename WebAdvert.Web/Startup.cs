@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.S3;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebAdvert.Web.Services;
 
 namespace WebAdvert.Web
 {
@@ -22,6 +24,8 @@ namespace WebAdvert.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //S3 uploader
+            services.AddTransient<IFileUploader, S3FileUploader>();
             //Add AWS Cognito
             //Cognito API does not pick the policy setting. Need to check bug fix
             services.AddCognitoIdentity(config =>
