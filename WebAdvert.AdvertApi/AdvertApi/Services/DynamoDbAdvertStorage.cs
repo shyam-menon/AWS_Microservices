@@ -45,6 +45,18 @@ namespace AdvertApi.Services
             //Return the right error code when save is not done
         }
 
+        // Check Dynamo DB health check
+        public async Task<bool> CheckHealthAsync()
+        {
+            using (var client = new AmazonDynamoDBClient())
+            {
+                // Check the availability of dependent table
+                var tableData = await client.DescribeTableAsync("Adverts");
+                return string.Compare(tableData.Table.TableStatus, "active", true) == 0;
+
+            }
+        }
+
         public async Task Confirm(ConfirmAdvertModel model)
         {
             using (var client = new AmazonDynamoDBClient())

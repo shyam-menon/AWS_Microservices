@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using AutoMapper;
 using AdvertApi.Helpers;
 using AdvertApi.Services;
+using AdvertApi.HealthChecks;
 
 namespace AdvertApi
 {
@@ -28,8 +29,13 @@ namespace AdvertApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(MappingProfiles));
-            services.AddTransient<IAdvertStorageService, DynamoDbAdvertStorage>();
+            services.AddTransient<IAdvertStorageService, DynamoDbAdvertStorage>();        
             services.AddControllers();
+            // Add health check. Separate new get packages are available to check the health of
+            // dependent resources like SQL server, S3 etc.
+            // The health check is cached and the timeout of the cache is 1 min here            
+            services.AddHealthChecks()
+                .AddCheck<StorageHealthCheck>("Storage");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +52,7 @@ namespace AdvertApi
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
             });
         }

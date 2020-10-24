@@ -7,5 +7,7 @@ namespace AdvertApi.Services
     {
         Task<string> Add(AdvertModel model);
         Task Confirm(ConfirmAdvertModel model);
+        // Health check for Dynamo DB
+        Task<bool> CheckHealthAsync();
     }
 }
