@@ -83,5 +83,23 @@ namespace AdvertApi.Services
                 }
             }
         }
+
+        public async Task<AdvertDbModel> FindById(string id)
+        {
+            using (var client = new AmazonDynamoDBClient())
+            {
+                using (var context = new DynamoDBContext(client))
+                {
+                    // Load the existing record using the Id
+                    var record = await context.LoadAsync<AdvertDbModel>(id);
+                    if (record == null)
+                    {
+                        throw new KeyNotFoundException($"A record with ID={id} was not found.");
+                    }
+
+                    return record;
+                }
+            }
+        }
     }
 }

@@ -1,14 +1,17 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Amazon.S3;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebAdvert.Web.Helpers;
+using WebAdvert.Web.ServiceClients;
 using WebAdvert.Web.Services;
+using AutoMapper;
+using Polly;
+using System.Net.Http;
+using System;
+using Polly.Extensions.Http;
+using System.Net;
 
 namespace WebAdvert.Web
 {
@@ -26,6 +29,13 @@ namespace WebAdvert.Web
         {
             //S3 uploader
             services.AddTransient<IFileUploader, S3FileUploader>();
+
+            //Automapper
+            services.AddAutoMapper(typeof(MappingProfiles));
+
+            //Add HttpClient and use Polly library for exponential backoff and circuit breaker
+            services.AddHttpClient<IAdvertApiClient, AdvertApiClient>().AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(ApplyCircuitBreakerPolicy());
             //Add AWS Cognito
             //Cognito API does not pick the policy setting. Need to check bug fix
             services.AddCognitoIdentity(config =>
@@ -47,6 +57,21 @@ namespace WebAdvert.Web
                 options.LoginPath = "/Accounts/Login";
             });
             services.AddControllersWithViews();
+        }
+
+        // Set the circuit breaker to break after 3 attempts for 30 seconds
+        private IAsyncPolicy<HttpResponseMessage> ApplyCircuitBreakerPolicy()
+        {
+            return HttpPolicyExtensions.HandleTransientHttpError()
+                .CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 3, TimeSpan.FromSeconds(30));
+        }
+
+        // Set retry when response from API is not found. Retry 5 times with exponential back off
+        private IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions.HandleTransientHttpError()
+                 .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+                 .WaitAndRetryAsync(retryCount: 5, sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
