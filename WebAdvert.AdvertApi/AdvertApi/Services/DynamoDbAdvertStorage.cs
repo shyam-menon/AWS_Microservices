@@ -27,7 +27,7 @@ namespace AdvertApi.Services
             using (var client = new AmazonDynamoDBClient())
             {
                 // Populate properties not mapped from API model
-                dbModel.Id = new Guid().ToString();
+                dbModel.Id = Guid.NewGuid().ToString();
                 dbModel.CreationDateTime = DateTime.UtcNow;
                 //Set status to pending. Only after the S3 storage is done is this changed as this is a
                 //distributed transaction
