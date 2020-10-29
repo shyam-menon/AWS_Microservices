@@ -57,7 +57,7 @@ namespace AdvertApi.Services
             }
         }
 
-        public async Task Confirm(ConfirmAdvertModel model)
+        public async Task ConfirmAsync(ConfirmAdvertModel model)
         {
             using (var client = new AmazonDynamoDBClient())
             {
@@ -72,6 +72,7 @@ namespace AdvertApi.Services
 
                     if (model.Status == AdvertStatus.Active)
                     {
+                        record.FilePath = model.FilePath;
                         //Set the status to active when record is found
                         record.Status = AdvertStatus.Active;
                         await context.SaveAsync(record);

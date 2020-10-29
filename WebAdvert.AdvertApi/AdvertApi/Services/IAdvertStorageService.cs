@@ -7,7 +7,7 @@ namespace AdvertApi.Services
     public interface IAdvertStorageService
     {
         Task<string> Add(AdvertModel model);
-        Task Confirm(ConfirmAdvertModel model);
+        Task ConfirmAsync(ConfirmAdvertModel model);
 
         Task<AdvertDbModel> FindByIdAsync(string id);
         // Health check for Dynamo DB

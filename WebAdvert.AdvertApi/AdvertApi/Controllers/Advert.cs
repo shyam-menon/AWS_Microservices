@@ -85,7 +85,7 @@ namespace AdvertApi.Controllers
         {
             try
             {
-                await _advertStorageService.Confirm(model);
+                await _advertStorageService.ConfirmAsync(model);
 
                 //Raise the message to SNS
                 await RaiseAdvertConfirmedMessage(model);

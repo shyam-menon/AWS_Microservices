@@ -66,6 +66,7 @@ namespace WebAdvert.Web.Controllers
                         var confirmModel = new ConfirmAdvertRequest
                         {
                             Id = id,
+                            FilePath = filePath,
                             Status = AdvertStatus.Active
                         };
 

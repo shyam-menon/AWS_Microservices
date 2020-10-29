@@ -10,22 +10,28 @@ namespace AdvertApi.Services
     [DynamoDBTable("Adverts")]
     public class AdvertDbModel
     {
-        [DynamoDBHashKey]
+        [DynamoDBHashKey] 
         public string Id { get; set; }
 
-        [DynamoDBProperty]
+        [DynamoDBProperty] 
         public string Title { get; set; }
 
-        [DynamoDBProperty]
+        [DynamoDBProperty] 
         public string Description { get; set; }
 
-        [DynamoDBProperty]
+        [DynamoDBProperty] 
         public double Price { get; set; }
 
-        [DynamoDBProperty]
+        [DynamoDBProperty] 
         public DateTime CreationDateTime { get; set; }
 
-        [DynamoDBProperty]
+        [DynamoDBProperty] 
         public AdvertStatus Status { get; set; }
+
+        [DynamoDBProperty] 
+        public string FilePath { get; set; }
+
+        [DynamoDBProperty] 
+        public string UserName { get; set; }
     }
 }

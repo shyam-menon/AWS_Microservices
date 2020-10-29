@@ -23,11 +23,18 @@ namespace WebAdvert.Web.Helpers
             //Mapping for website models
             CreateMap<CreateAdvertViewModel, CreateAdvertModel>().ReverseMap();
 
-            CreateMap<AdvertSearchType, SearchViewModel>();
+            CreateMap<AdvertSearchType, SearchViewModel>()
+                .ForMember(
+                    dest => dest.Id, src => src.MapFrom(field => field.Id))
+                .ForMember(
+                    dest => dest.Title, src => src.MapFrom(field => field.Title));
 
             CreateMap<AdvertModel, AdvertModelClient>().ReverseMap();
 
-            CreateMap<AdvertModelClient, IndexViewModel>();
+            CreateMap<AdvertModelClient, IndexViewModel>()
+                .ForMember(
+                    dest => dest.Title, src => src.MapFrom(field => field.Title))
+                .ForMember(dest => dest.Image, src => src.MapFrom(field => field.FilePath));
 
         }
     }
