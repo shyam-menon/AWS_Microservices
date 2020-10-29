@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAdvert.Web.Models;
+using WebAdvert.Web.Models.AdvertManagement;
+using WebAdvert.Web.Models.Home;
 using WebAdvert.Web.ServiceClients;
 
 namespace WebAdvert.Web.Helpers
@@ -20,6 +22,13 @@ namespace WebAdvert.Web.Helpers
 
             //Mapping for website models
             CreateMap<CreateAdvertViewModel, CreateAdvertModel>().ReverseMap();
+
+            CreateMap<AdvertSearchType, SearchViewModel>();
+
+            CreateMap<AdvertModel, AdvertModelClient>().ReverseMap();
+
+            CreateMap<AdvertModelClient, IndexViewModel>();
+
         }
     }
 }

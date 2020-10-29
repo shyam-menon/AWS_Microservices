@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using WebAdvert.Web.Models.AdvertManagement;
 
 namespace WebAdvert.Web.ServiceClients
 {
@@ -16,7 +17,7 @@ namespace WebAdvert.Web.ServiceClients
     {
         private readonly IConfiguration _configuration;
         private readonly HttpClient _client;
-        private readonly IMapper _mapper;
+        private readonly IMapper _mapper;        
 
         public AdvertApiClient(IConfiguration configuration, HttpClient client, IMapper mapper)
         {
@@ -63,6 +64,13 @@ namespace WebAdvert.Web.ServiceClients
             var advertResponse = _mapper.Map<CreateAdvertResponse>(createAdvertResponse); 
 
             return advertResponse;
+        }
+
+        public async Task<List<AdvertModelClient>> GetAllAsync()
+        {
+            var apiCallResponse = await _client.GetAsync(new Uri($"{_client.BaseAddress}/all")).ConfigureAwait(false);
+            var fullAdvert = await apiCallResponse.Content.ReadAsAsync<List<AdvertModel>>().ConfigureAwait(false);
+            return fullAdvert.Select(x => _mapper.Map<AdvertModelClient>(x)).ToList();
         }
     }
 }

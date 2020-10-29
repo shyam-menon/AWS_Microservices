@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AdvertApi.Models;
+using WebAdvert.Web.Models.AdvertManagement;
 
 namespace WebAdvert.Web.ServiceClients
 {
@@ -13,5 +14,7 @@ namespace WebAdvert.Web.ServiceClients
         Task<CreateAdvertResponse> Create(CreateAdvertModel model);
 
         Task<bool> Confirm(ConfirmAdvertRequest model);
+
+        Task<List<AdvertModelClient>> GetAllAsync();
     }
 }

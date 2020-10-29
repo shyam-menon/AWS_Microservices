@@ -36,6 +36,10 @@ namespace AdvertApi
             // The health check is cached and the timeout of the cache is 1 min here            
             services.AddHealthChecks()
                 .AddCheck<StorageHealthCheck>("Storage");
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllOrigin", policy => policy.WithOrigins("*").AllowAnyHeader());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,6 +52,8 @@ namespace AdvertApi
 
             app.UseRouting();
 
+
+            app.UseCors();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -36,6 +36,8 @@ namespace WebAdvert.Web
             //Add HttpClient and use Polly library for exponential backoff and circuit breaker
             services.AddHttpClient<IAdvertApiClient, AdvertApiClient>().AddPolicyHandler(GetRetryPolicy())
                 .AddPolicyHandler(ApplyCircuitBreakerPolicy());
+            services.AddHttpClient<ISearchApiClient, SearchApiClient>().AddPolicyHandler(GetRetryPolicy())
+                .AddPolicyHandler(ApplyCircuitBreakerPolicy());
             //Add AWS Cognito
             //Cognito API does not pick the policy setting. Need to check bug fix
             services.AddCognitoIdentity(config =>

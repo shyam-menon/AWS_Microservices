@@ -1,4 +1,5 @@
 ﻿using AdvertApi.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AdvertApi.Services
@@ -8,8 +9,10 @@ namespace AdvertApi.Services
         Task<string> Add(AdvertModel model);
         Task Confirm(ConfirmAdvertModel model);
 
-        Task<AdvertDbModel> FindById(string id);
+        Task<AdvertDbModel> FindByIdAsync(string id);
         // Health check for Dynamo DB
         Task<bool> CheckHealthAsync();
+
+        Task<List<AdvertModel>> GetAllAsync();
     }
 }

@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration;
+@inject IConfiguration configuration
+
+@{ 
+    var advertImageUrl = configuration.GetValue<string>("ImageBaseUrl"); 
+ }
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -8,6 +15,7 @@
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
+    <input type="hidden" value="@advertImageUrl" id="hidImagesBaseUrl" />
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
