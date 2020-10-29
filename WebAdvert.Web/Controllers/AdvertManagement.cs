@@ -62,7 +62,8 @@ namespace WebAdvert.Web.Controllers
                                 (message: "Could not upload the image to file repository. See logs for details");
                         }
 
-                        //If upload to S3 is successful then call the adevert api again
+                        //If upload to S3 is successful then call the advert api again
+                        //with the file path in S3 and the status as active
                         var confirmModel = new ConfirmAdvertRequest
                         {
                             Id = id,

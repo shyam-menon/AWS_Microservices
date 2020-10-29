@@ -102,6 +102,7 @@ namespace AdvertApi.Controllers
             return new OkResult();
         }
 
+        //Raise an event to an SNS topic
         private async Task RaiseAdvertConfirmedMessage(ConfirmAdvertModel model)
         {
             var topicArn = _configuration.GetValue<string>("TopicArn");
