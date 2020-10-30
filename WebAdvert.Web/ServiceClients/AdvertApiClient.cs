@@ -72,5 +72,12 @@ namespace WebAdvert.Web.ServiceClients
             var fullAdvert = await apiCallResponse.Content.ReadAsAsync<List<AdvertModel>>().ConfigureAwait(false);
             return fullAdvert.Select(x => _mapper.Map<AdvertModelClient>(x)).ToList();
         }
+
+        public async Task<AdvertModelClient> GetAsync(string advertId)
+        {
+            var apiCallResponse = await _client.GetAsync(new Uri($"{_client.BaseAddress}/{advertId}")).ConfigureAwait(false);
+            var selectedAdvert = await apiCallResponse.Content.ReadAsAsync<AdvertModel>().ConfigureAwait(false);
+            return _mapper.Map<AdvertModelClient>(selectedAdvert);
+        }
     }
 }

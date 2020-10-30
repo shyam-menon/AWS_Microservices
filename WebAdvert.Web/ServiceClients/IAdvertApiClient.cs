@@ -16,5 +16,7 @@ namespace WebAdvert.Web.ServiceClients
         Task<bool> Confirm(ConfirmAdvertRequest model);
 
         Task<List<AdvertModelClient>> GetAllAsync();
+
+        Task<AdvertModelClient> GetAsync(string advertId);
     }
 }
