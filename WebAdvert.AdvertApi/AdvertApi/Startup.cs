@@ -13,6 +13,11 @@ using AutoMapper;
 using AdvertApi.Helpers;
 using AdvertApi.Services;
 using AdvertApi.HealthChecks;
+using Microsoft.OpenApi.Models;
+using Amazon.Util;
+using Amazon.Runtime;
+using Amazon.ServiceDiscovery;
+using Amazon.ServiceDiscovery.Model;
 
 namespace AdvertApi
 {
@@ -40,6 +45,19 @@ namespace AdvertApi
             {
                 options.AddPolicy("AllOrigin", policy => policy.WithOrigins("*").AllowAnyHeader());
             });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Web Advertisement Apis",
+                    Version = "version 1",
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Shyam Menon"
+                    }
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +70,14 @@ namespace AdvertApi
 
             app.UseRouting();
 
+            // Add Swagger
+            app.UseSwagger();
+            app.UseSwaggerUI( c=>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Web Advert Api");
+            });
+
+            //await RegisterToCloudMap();
 
             app.UseCors();
             app.UseAuthorization();
@@ -61,6 +87,29 @@ namespace AdvertApi
                 endpoints.MapHealthChecks("/health");
                 endpoints.MapControllers();
             });
+        }
+
+        private async Task RegisterToCloudMap()
+        {
+            const string serviceId = "ServiceIdOfCloudMap";
+            var instanceId = EC2InstanceMetadata.InstanceId;
+
+            if (!string.IsNullOrEmpty(instanceId))
+            {
+                var ipv4 = EC2InstanceMetadata.PrivateIpAddress;
+                var client = new AmazonServiceDiscoveryClient();
+
+                await client.RegisterInstanceAsync(new RegisterInstanceRequest
+                {
+                    InstanceId = instanceId,
+                    ServiceId = serviceId,
+                    Attributes = new Dictionary<string, string>
+                    {
+                        {"AWS_INSTANCE_IPV4", ipv4},
+                        {"AWS_INSTANCE_PORT", "80" }
+                    }
+                });
+            }
         }
     }
 }
